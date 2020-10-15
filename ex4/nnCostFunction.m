@@ -74,8 +74,25 @@ y = repmat([1:num_labels], m, 1) == repmat(y, 1, num_labels);
 J = (-1/m)*sum(sum(y.*log(hypothesis) + (1-y).*log(1-hypothesis)));
 
 
+% part2
+% Init delta1 and delta1
+delta1 = zeros(size(Theta1));
+delta2 = zeros(size(Theta2));
 
+% Loop to 1:m
+for l = 1:m
+a1l = a1(l,:);
+a2l = a2(l,:);
+a3l = hypothesis(l,:);
 
+outputl = y(t, :);
+
+delta3 = a3l - outputl;
+sigGr = sigmoidGradient([1;Theta1 * a1l']);
+delta2 = Theta2'*delta3' .* sigGr;
+                         
+                    
+end;
 
 
 
