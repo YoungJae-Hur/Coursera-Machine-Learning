@@ -61,50 +61,45 @@ Theta2_grad = zeros(size(Theta2));
 %               the regularization separately and then add them to Theta1_grad
 %               and Theta2_grad from Part 2.
 %
+% reference: https://www.hepeng.me/how-to-implement-a-neural-network-in-octave-and-what-is-back-propagation/
     
 % part 1
-a1 = [ones(m, 1), X];
+I = eye(num_labels);
+Y = zeros(m, num_labels);
+for i=1:m
+  Y(i, :)= I(y(i), :);
+endfor
+
+a1 = [ones(m, 1) X];
 z2 = a1 * Theta1';
-% a2 = sigmoid(z2);
-a2 = [ones(m, 1), sigmoid(z2)];
+a2 = [ones(size(z2, 1), 1) sigmoid(z2)];
 z3 = a2 * Theta2';
-hypothesis = sigmoid(z3);
+a3 = sigmoid(z3);
+hypo = a3;
 
-y = repmat([1:num_labels], m, 1) == repmat(y, 1, num_labels);
-J = (-1/m)*sum(sum(y.*log(hypothesis) + (1-y).*log(1-hypothesis)));
+% calculte penalty
+p = sum(sum(Theta1(:, 2:end).^2, 2)) + sum(sum(Theta2(:, 2:end).^2, 2));
 
+% find J
+J = sum(sum((-Y).*log(hypo) - (1-Y).*log(1-hypo), 2))/m + lambda*p/(2*m);
 
-% part2
-% Init delta1 and delta1
-delta1 = zeros(size(Theta1));
-delta2 = zeros(size(Theta2));
+% find deltas
+delta_3 = a3 .- Y;
+delta_2 = (delta_3*Theta2(:,2:end)).*sigmoidGradient(z2);
 
-% Loop to 1:m
-for l = 1:m
-a1l = a1(l,:);
-a2l = a2(l,:);
-a3l = hypothesis(l,:);
+% accumulated gradients
+acc_delta1 = (delta_2'*a1);
+acc_delta2 = (delta_3'*a2);
 
-outputl = y(t, :);
-
-delta3 = a3l - outputl;
-sigGr = sigmoidGradient([1;Theta1 * a1l']);
-delta2 = Theta2'*delta3' .* sigGr;
-                         
-                    
-end;
-
-
-
-
-
-
-
-
-
-
-
-
+% calculate regularized gradient
+Theta1_reg = Theta1; 
+Theta1_reg(:,1) = 0;
+Theta2_reg = Theta2; 
+Theta2_reg(:,1) = 0;
+          
+% now find gradient
+Theta1_grad = acc_delta1 / m + (lambda/m) * Theta1_reg;
+Theta2_grad = acc_delta2 / m + (lambda/m) * Theta2_reg;
 
 
 
