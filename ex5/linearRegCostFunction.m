@@ -26,11 +26,8 @@ theta_reg = [0;shift_theta];
 
 J = (1/(2*m))*sum((hyp - y).^2) + (lambda/(2*m))*theta_reg'*theta_reg;
 
-
-
-
-
-
+% find gradient
+grad = (1/m) * (X'*(hyp-y) + (lambda*theta_reg));
 
 
 
