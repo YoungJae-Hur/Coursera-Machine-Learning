@@ -39,13 +39,15 @@ error_val = zeros(length(lambda_vec), 1);
 %
 %
 
+% find m 
+m = length(y);
+length_lambda = length(lambda_vec);
 
-
-
-
-
-
-
+for i = 1:length_lambda,
+    lambda = lambda_vec(i);
+    error_train(i) = (1/(2*m)) * sum(((X*trainLinearReg(X, y, lambda))-y).^2);
+    error_val(i) = (1/(2*size(Xval, 1))) * sum(((Xval*trainLinearReg(X, y, lambda))-yval).^2);
+end
 
 
 % =========================================================================
