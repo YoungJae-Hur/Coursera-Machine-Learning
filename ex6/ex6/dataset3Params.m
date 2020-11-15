@@ -23,10 +23,28 @@ sigma = 0.3;
 %        mean(double(predictions ~= yval))
 %
 
+    
+values_list = [0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30];
+error_low = inf;
 
+% fprintf('1. start DataSet3 \n');
+for C = values_list,
+  for sigma = values_list,
+    model = svmTrain(X, y, C, @(x1, x2) gaussianKernel(x1, x2, sigma));
+    err = mean(double(svmPredict(model, Xval) ~= yval));
+    if( err <= error_low )
+      C_final = C;
+      sigma_final = sigma;
+      error_low = err;
+      % fprintf('2. New error min updated [C, sigma] = [%f, %f], error = %f', C_final, sigma_final, error_low)
+    end
+  end
+end
+          
+C = C_final;
+sigma = sigma_final;
 
-
-
+fprintf('3. Final result values: [C, sigma] = [%f, %f], error = %f\n', C, sigma, error_low);
 
 
 % =========================================================================
