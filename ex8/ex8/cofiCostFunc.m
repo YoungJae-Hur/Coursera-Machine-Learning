@@ -40,18 +40,9 @@ Theta_grad = zeros(size(Theta));
 %                     partial derivatives w.r.t. to each element of Theta
 %
 
-
-
-
-
-
-
-
-
-
-
-
-
+% find collaborative filtering cost function
+    error = (X * Theta') - Y;
+    J = (1/2) * sum(sum(R.*(error.^2)));
 
 
 
