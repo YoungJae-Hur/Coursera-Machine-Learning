@@ -41,9 +41,12 @@ Theta_grad = zeros(size(Theta));
 %
 
 % find collaborative filtering cost function
-    error = (X * Theta') - Y;
-    J = (1/2) * sum(sum(R.*(error.^2)));
+error = (X * Theta') - Y;
+J = (1/2) * sum(sum(R.*(error.^2)));
 
+% Find collaborative fultering gradient
+X_grad = ((X * Theta' - Y) .* R) * Theta + (lambda * X);
+Theta_grad = ((X * Theta' - Y) .* R)' * X + (lambda * Theta);
 
 
 % =============================================================
